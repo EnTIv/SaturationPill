@@ -1,0 +1,7 @@
+name: SaturationPill
+main: com.entiv.${name}.SaturationPill
+version: ${version}
+
+commands:
+  SaturationPill:
+    description: do something
