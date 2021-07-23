@@ -5,7 +5,7 @@ plugins {
 apply plugin: 'maven'
 
 group 'com.entiv'
-version '1.16'
+version '1.0'
 
 repositories {
 
@@ -80,13 +80,6 @@ dependencies {
     compileOnly "com.github.MilkBowl:VaultAPI:1.7"
     compileOnly 'me.clip:placeholderapi:2.10.9'
     compileOnly 'net.md-5:bungeecord-chat:1.16-R0.1'
-}
-
-uploadArchives {
-    repositories.mavenDeployer {
-        repository(url: 'file://C:\\Users\\EnTIv\\.m2\\repository')
-
-    }
 }
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'

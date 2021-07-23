@@ -13,10 +13,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PlayerListener implements Listener {
 
-    Configuration config = SaturationPill.getInstance().getConfig();
 
     @EventHandler
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
+
+        Configuration config = SaturationPill.getInstance().getConfig();
 
         Player player = event.getEntity() instanceof Player ? ((Player) event.getEntity()) : null;
 
