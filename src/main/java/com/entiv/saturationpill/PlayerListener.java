@@ -1,10 +1,15 @@
 package com.entiv.saturationpill;
 
 import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -13,7 +18,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PlayerListener implements Listener {
 
-
     @EventHandler
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
 
@@ -21,7 +25,6 @@ public class PlayerListener implements Listener {
 
         Player player = event.getEntity() instanceof Player ? ((Player) event.getEntity()) : null;
 
-        System.out.println(event.getFoodLevel());
         if (player == null) return;
 
         int foodLevel = event.getFoodLevel();
@@ -64,6 +67,42 @@ public class PlayerListener implements Listener {
 
                 if (find.get()) return;
             }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerInteract(BlockBreakEvent event) {
+        Player player = event.getPlayer();
+        SaturationPill plugin = SaturationPill.getInstance();
+        FileConfiguration config = plugin.getConfig();
+
+        int checkFoodLevel = config.getInt("饥饿惩罚.检测值");
+        boolean denyBlock = config.getBoolean("饥饿惩罚.禁止破坏方块");
+
+        if (!config.getBoolean("饥饿惩罚.开启")) return;
+        if (player.getFoodLevel() > checkFoodLevel) return;
+
+        if (denyBlock) {
+            event.setCancelled(true);
+            Message.send(player, config.getString("提示消息.禁止破坏方块"));
+        }
+    }
+
+    @EventHandler
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+        Player player = event.getPlayer();
+        SaturationPill plugin = SaturationPill.getInstance();
+        FileConfiguration config = plugin.getConfig();
+
+        int checkFoodLevel = config.getInt("饥饿惩罚.检测值");
+        boolean denyAttack = config.getBoolean("饥饿惩罚.禁止攻击");
+
+        if (!config.getBoolean("饥饿惩罚.开启")) return;
+        if (player.getFoodLevel() > checkFoodLevel) return;
+
+        if (denyAttack) {
+            event.setCancelled(true);
+            Message.send(player, config.getString("提示消息.禁止攻击"));
         }
     }
 }
