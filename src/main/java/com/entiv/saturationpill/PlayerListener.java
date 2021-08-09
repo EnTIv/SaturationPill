@@ -2,11 +2,12 @@ package com.entiv.saturationpill;
 
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -89,8 +90,12 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        Player player = event.getPlayer();
+    public void onPlayerInteractEntity(EntityDamageByEntityEvent event) {
+        Player player = event.getDamager() instanceof Player ? ((Player) event.getDamager()) : null;
+        LivingEntity livingEntity = event.getEntity() instanceof LivingEntity ? ((LivingEntity) event.getEntity()) : null;
+
+        if (player == null || livingEntity == null) return;
+
         SaturationPill plugin = SaturationPill.getInstance();
         FileConfiguration config = plugin.getConfig();
 
